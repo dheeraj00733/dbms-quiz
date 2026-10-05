@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DBMS Master Quiz – Ace Your Midsem</title>
+  <meta name="description" content="Comprehensive DBMS quiz platform with 300+ MCQs, instant feedback, and detailed explanations for every answer. Perfect for exam preparation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <nav class="navbar">
+      <div class="logo">
+        <span class="logo-icon">🗄️</span>
+        <span class="logo-text">DBMS<span class="accent">Quiz</span></span>
+      </div>
+      <div class="nav-badges">
+        <span class="badge badge-green">300+ Questions</span>
+        <span class="badge badge-blue">10 Topics</span>
+        <span class="badge badge-purple">Instant Feedback</span>
+      </div>
+    </nav>
+
+    <div class="hero-content">
+      <div class="hero-tag">🎯 Midsem Exam Prep</div>
+      <h1 class="hero-title">
+        Master <span class="gradient-text">DBMS</span><br/>in One Night
+      </h1>
+      <p class="hero-subtitle">
+        300+ hand-crafted MCQs with trap questions, instant explanations for every option (right or wrong), and topic-wise practice to clear all your doubts before the exam.
+      </p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">300+</span><span class="stat-label">Questions</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">10</span><span class="stat-label">Topics</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Explained</span></div>
+      </div>
+      <a href="#topics" class="cta-btn">
+        <span>Start Practicing</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Topics Grid -->
+  <main id="topics" class="topics-section">
+    <div class="section-header">
+      <h2>Choose Your Topic</h2>
+      <p>Practice topic-wise or take the grand mixed quiz</p>
+    </div>
+
+    <div class="topics-grid">
+      <a href="quiz.html?topic=0" class="topic-card" style="--accent:#6366f1">
+        <div class="topic-icon">📚</div>
+        <div class="topic-num">Topic 1</div>
+        <h3>Introduction to Data</h3>
+        <p>Data types, Databases, DBMS need, File-based limitations</p>
+        <div class="topic-meta">
+          <span class="q-count">35 Questions</span>
+          <span class="difficulty diff-easy">Foundational</span>
+        </div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="quiz.html?topic=1" class="topic-card" style="--accent:#8b5cf6">
+        <div class="topic-icon">🔑</div>
+        <div class="topic-num">Topic 2</div>
+        <h3>Relational DB Fundamentals</h3>
+        <p>RDBMS concepts, Keys, Constraints, Data Types, Integrity</p>
+        <div class="topic-meta">
+          <span class="q-count">40 Questions</span>
+          <span class="difficulty diff-med">Intermediate</span>
+        </div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="quiz.html?topic=2" class="topic-card" style="--accent:#ec4899">
+        <div class="topic-icon">⚙️</div>
+        <div class="topic-num">Topic 3</div>
+        <h3>SQL Command Categories</h3>
+        <p>DDL, DML, DQL, TCL, DCL – All SQL command types</p>
+        <div class="topic-meta">
+          <span class="q-count">35 Questions</span>
+          <span class="difficulty diff-med">Intermediate</span>
+        </div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="quiz.html?topic=3" class="topic-card" style="--accent:#f59e0b">
+        <div class="topic-icon">🔍</div>
+        <div class="topic-num">Topic 4</div>
+        <h3>SQL Retrieving Data</h3>
+        <p>SELECT, WHERE, LIKE, IN, EXISTS, Wildcards, LIMIT</p>
+        <div class="topic-meta">
+          <span class="q-count">35 Questions</span>
+          <span class="difficulty diff-med">Intermediate</span>
+        </div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="quiz.html?topic=4" class="topic-card" style="--accent:#10b981">
+        <div class="topic-icon">🧮</div>
+        <div class="topic-num">Topic 5</div>
+        <h3>SQL Functions</h3>
+        <p>Numeric, Date/Time, String, NULL Handling, Aggregate</p>
+        <div class="topic-meta">
+          <span class="q-count">40 Questions</span>
+          <span class="difficulty diff-hard">Advanced</span>
+        </div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="quiz.html?topic=5" class="topic-card" style="--accent:#3b82f6">
+        <div class="topic-icon">📊</div>
+        <div class="topic-num">Topic 6</div>
+        <h3>GROUP BY and CASE</h3>
+        <p>GROUP BY, HAVING, WHERE vs HAVING, CASE expressions</p>
+        <div class="topic-meta">
+          <span class="q-count">35 Questions</span>
+          <span class="difficulty diff-hard">Advanced</span>
+        </div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="quiz.html?topic=6" class="topic-card" style="--accent:#06b6d4">
+        <div class="topic-icon">🪟</div>
+        <div class="topic-num">Topic 7</div>
+        <h3>Window Functions</h3>
+        <p>ROW_NUMBER, RANK, LAG, LEAD, Moving Averages</p>
+        <div class="topic-meta">
+          <span class="q-count">35 Questions</span>
+          <span class="difficulty diff-hard">Advanced</span>
+        </div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="quiz.html?topic=7" class="topic-card" style="--accent:#f97316">
+        <div class="topic-icon">🔄</div>
+        <div class="topic-num">Topic 8</div>
+        <h3>Subqueries</h3>
+        <p>Correlated vs Non-Correlated, Subquery locations</p>
+        <div class="topic-meta">
+          <span class="q-count">35 Questions</span>
+          <span class="difficulty diff-hard">Advanced</span>
+        </div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="quiz.html?topic=8" class="topic-card" style="--accent:#84cc16">
+        <div class="topic-icon">🔗</div>
+        <div class="topic-num">Topic 9</div>
+        <h3>Joins & Set Operations</h3>
+        <p>INNER, LEFT, RIGHT, FULL, SELF JOIN, UNION, INTERSECT</p>
+        <div class="topic-meta">
+          <span class="q-count">40 Questions</span>
+          <span class="difficulty diff-hard">Advanced</span>
+        </div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="quiz.html?topic=9" class="topic-card" style="--accent:#e879f9">
+        <div class="topic-icon">🗺️</div>
+        <div class="topic-num">Topic 10</div>
+        <h3>Data Modelling & ER</h3>
+        <p>ER Diagrams, Entities, Cardinality, Weak Entities</p>
+        <div class="topic-meta">
+          <span class="q-count">35 Questions</span>
+          <span class="difficulty diff-med">Intermediate</span>
+        </div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <!-- Mixed Quiz Card -->
+      <a href="quiz.html?topic=mixed" class="topic-card mixed-card">
+        <div class="topic-icon">🎯</div>
+        <div class="topic-num">GRAND MIX</div>
+        <h3>Mixed Quiz – All Topics</h3>
+        <p>Random questions from all 10 topics. Ultimate exam simulation!</p>
+        <div class="topic-meta">
+          <span class="q-count">50 Random Qs</span>
+          <span class="difficulty diff-hard">Exam Mode</span>
+        </div>
+        <div class="topic-arrow">→</div>
+      </a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Built for your midsem success 🚀 | Good luck on your exam!</p>
+  </footer>
+
+  <script>
+    // Smooth scroll
+    document.querySelector('.cta-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('topics').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Card hover parallax
+    document.querySelectorAll('.topic-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 10;
+        card.style.transform = `perspective(600px) rotateX(${-y}deg) rotateY(${x}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DBMS Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <div class="quiz-page" id="app">
+    <!-- Quiz Header -->
+    <header class="quiz-header" id="quizHeader">
+      <div class="quiz-header-left">
+        <a href="index.html" class="back-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back
+        </a>
+        <div class="quiz-topic-title" id="topicTitle">Loading Topic...</div>
+      </div>
+      <div class="quiz-progress-bar-wrap">
+        <div class="quiz-progress-label">
+          <span id="progressText">Question 1 of 10</span>
+          <span class="quiz-score-badge" id="scoreBadge">Score: 0</span>
+        </div>
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+      <div class="loader"></div>
+      <p style="color: var(--text-muted); font-weight: 500;">Loading Questions...</p>
+    </div>
+
+    <!-- Quiz Container -->
+    <main class="quiz-container" id="quizContainer" style="display: none;">
+      <div class="question-card">
+        <div class="q-meta">
+          <span class="q-num" id="qNumBadge">Q1</span>
+          <span class="q-tag" id="qTopicTag" style="display: none;">Topic Name</span>
+          <span class="q-trap" id="qTrapTag" style="display: none;">🚨 Trap Question!</span>
+        </div>
+        
+        <h2 class="q-text" id="qText">Question Text</h2>
+        <div class="q-code" id="qCode" style="display: none;"></div>
+
+        <div class="options-list" id="optionsList">
+          <!-- Options injected via JS -->
+        </div>
+
+        <div class="main-explanation" id="mainExplanation">
+          <div class="exp-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            Detailed Explanation
+          </div>
+          <div class="exp-text" id="expText"></div>
+        </div>
+
+        <div class="quiz-nav">
+          <button class="nav-btn btn-secondary" id="btnPrev" disabled>Previous</button>
+          <button class="nav-btn btn-primary" id="btnNext" disabled>Next Question</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Results Screen -->
+    <main class="results-page" id="resultsScreen" style="display: none;">
+      <div class="results-card">
+        <div class="results-emoji" id="rEmoji">🎉</div>
+        <h1 class="results-title" id="rTitle">Quiz Completed!</h1>
+        <p class="results-sub" id="rSub">Here is how you did on this topic.</p>
+        
+        <div class="score-circle" id="scoreCircle" style="--pct: 0deg;">
+          <span id="rScorePct">0%</span>
+        </div>
+
+        <div class="results-stats">
+          <div class="r-stat">
+            <span class="r-stat-num" id="rTotal">0</span>
+            <span class="r-stat-label">Total Qs</span>
+          </div>
+          <div class="r-stat">
+            <span class="r-stat-num r-correct" id="rCorrect">0</span>
+            <span class="r-stat-label">Correct</span>
+          </div>
+          <div class="r-stat">
+            <span class="r-stat-num r-wrong" id="rWrong">0</span>
+            <span class="r-stat-label">Wrong</span>
+          </div>
+        </div>
+
+        <div class="results-btns">
+          <button class="btn-secondary" onclick="location.reload()">Retry Quiz</button>
+          <a href="index.html" class="btn-primary">Choose Another Topic</a>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="questions.js"></script>
+  <script>
+    // App State
+    let currentQuestions = [];
+    let currentIdx = 0;
+    let score = 0;
+    let userAnswers = []; // stores selected option index per question
+    let isMixedMode = false;
+
+    // DOM Elements
+    const els = {
+      loading: document.getElementById('loadingScreen'),
+      quizContainer: document.getElementById('quizContainer'),
+      resultsScreen: document.getElementById('resultsScreen'),
+      topicTitle: document.getElementById('topicTitle'),
+      progressText: document.getElementById('progressText'),
+      progressFill: document.getElementById('progressFill'),
+      scoreBadge: document.getElementById('scoreBadge'),
+      qNumBadge: document.getElementById('qNumBadge'),
+      qTopicTag: document.getElementById('qTopicTag'),
+      qTrapTag: document.getElementById('qTrapTag'),
+      qText: document.getElementById('qText'),
+      qCode: document.getElementById('qCode'),
+      optionsList: document.getElementById('optionsList'),
+      mainExplanation: document.getElementById('mainExplanation'),
+      expText: document.getElementById('expText'),
+      btnPrev: document.getElementById('btnPrev'),
+      btnNext: document.getElementById('btnNext')
+    };
+
+    // Init
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const topicParam = urlParams.get('topic');
+
+      setTimeout(() => {
+        if (topicParam === 'mixed') {
+          isMixedMode = true;
+          currentQuestions = getMixedQuestions(50);
+          els.topicTitle.textContent = "GRAND MIX (50 Questions)";
+        } else {
+          const tIdx = parseInt(topicParam);
+          if (!isNaN(tIdx) && tIdx >= 0 && tIdx < TOPICS.length) {
+            currentQuestions = QUESTIONS[tIdx] || [];
+            els.topicTitle.textContent = TOPICS[tIdx];
+          } else {
+            // fallback
+            currentQuestions = QUESTIONS[0] || [];
+            els.topicTitle.textContent = TOPICS[0];
+          }
+        }
+        
+        userAnswers = new Array(currentQuestions.length).fill(-1);
+        
+        els.loading.style.display = 'none';
+        if (currentQuestions.length > 0) {
+          els.quizContainer.style.display = 'flex';
+          loadQuestion(0);
+        } else {
+          els.topicTitle.textContent = "No questions available for this topic yet!";
+        }
+      }, 600); // fake loading for smooth UX
+    });
+
+    function loadQuestion(idx) {
+      const q = currentQuestions[idx];
+      const hasAnswered = userAnswers[idx] !== -1;
+
+      // Update UI
+      els.qNumBadge.textContent = `Q${idx + 1}`;
+      els.progressText.textContent = `Question ${idx + 1} of ${currentQuestions.length}`;
+      els.progressFill.style.width = `${((idx) / currentQuestions.length) * 100}%`;
+      
+      if (q.trap) {
+        els.qTrapTag.style.display = 'inline-block';
+      } else {
+        els.qTrapTag.style.display = 'none';
+      }
+
+      if (isMixedMode && q.topicIdx !== undefined) {
+        els.qTopicTag.textContent = TOPICS[q.topicIdx];
+        els.qTopicTag.style.display = 'inline-block';
+      } else {
+        els.qTopicTag.style.display = 'none';
+      }
+
+      // Handle Code block in question (if text contains backticks or is multiline)
+      let qTextStr = q.q;
+      if (qTextStr.includes('```')) {
+        const parts = qTextStr.split('```');
+        els.qText.textContent = parts[0].trim();
+        els.qCode.textContent = parts[1].trim();
+        els.qCode.style.display = 'block';
+      } else if (qTextStr.includes('\n')) {
+        const parts = qTextStr.split('\n');
+        els.qText.textContent = parts[0].trim();
+        els.qCode.textContent = parts.slice(1).join('\n').trim();
+        els.qCode.style.display = 'block';
+      } else {
+        els.qText.textContent = qTextStr;
+        els.qCode.style.display = 'none';
+      }
+
+      // Render Options
+      els.optionsList.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+      
+      q.opts.forEach((optText, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `
+          <div class="option-letter">${letters[i]}</div>
+          <div class="option-text">${optText}</div>
+          <div class="option-indicator"></div>
+        `;
+        
+        const expDiv = document.createElement('div');
+        expDiv.className = 'option-explanation';
+        if (i === q.ans) {
+          expDiv.classList.add('correct-exp');
+        } else {
+          expDiv.classList.add('wrong-exp');
+        }
+        expDiv.textContent = q.exps[i];
+
+        if (hasAnswered) {
+          btn.disabled = true;
+          // Apply states based on previous answer
+          if (i === q.ans) {
+            btn.classList.add('correct');
+            btn.querySelector('.option-indicator').innerHTML = '✓';
+            if (userAnswers[idx] === i) {
+                btn.classList.add('with-note');
+                expDiv.classList.add('visible');
+            }
+          } else if (userAnswers[idx] === i) {
+            btn.classList.add('wrong');
+            btn.classList.add('with-note');
+            btn.querySelector('.option-indicator').innerHTML = '✗';
+            expDiv.classList.add('visible');
+          } else {
+            btn.classList.add('dimmed');
+          }
+        } else {
+          btn.onclick = () => selectOption(i, q.ans, btn, expDiv);
+        }
+
+        els.optionsList.appendChild(btn);
+        els.optionsList.appendChild(expDiv);
+      });
+
+      // Explanation box (overall)
+      els.mainExplanation.classList.remove('visible');
+      if (hasAnswered && q.exps[q.ans]) {
+        els.expText.innerHTML = `<strong>The correct answer is ${letters[q.ans]}:</strong> ${q.opts[q.ans]}<br/><br/>${q.exps[q.ans]}`;
+        els.mainExplanation.classList.add('visible');
+      }
+
+      // Nav buttons
+      els.btnPrev.disabled = idx === 0;
+      els.btnNext.disabled = !hasAnswered;
+      if (idx === currentQuestions.length - 1 && hasAnswered) {
+        els.btnNext.textContent = 'Finish Quiz';
+      } else {
+        els.btnNext.textContent = 'Next Question';
+      }
+    }
+
+    function selectOption(selectedIdx, correctIdx, btn, expDiv) {
+      userAnswers[currentIdx] = selectedIdx;
+      const isCorrect = selectedIdx === correctIdx;
+      
+      if (isCorrect) score++;
+      els.scoreBadge.textContent = `Score: ${score}`;
+
+      // Disable all buttons and show states
+      const allBtns = els.optionsList.querySelectorAll('.option-btn');
+      const allExps = els.optionsList.querySelectorAll('.option-explanation');
+      
+      allBtns.forEach((b, i) => {
+        b.disabled = true;
+        if (i === correctIdx) {
+          b.classList.add('correct');
+          b.querySelector('.option-indicator').innerHTML = '✓';
+        } else if (i === selectedIdx) {
+          b.classList.add('wrong');
+          b.classList.add('with-note');
+          b.querySelector('.option-indicator').innerHTML = '✗';
+          allExps[i].classList.add('visible');
+        } else {
+          b.classList.add('dimmed');
+        }
+      });
+
+      // Ensure correct explanation is visible if they got it right or wrong
+      if(isCorrect) {
+          btn.classList.add('with-note');
+          expDiv.classList.add('visible');
+      }
+      
+      // Main explanation
+      const q = currentQuestions[currentIdx];
+      const letters = ['A', 'B', 'C', 'D'];
+      els.expText.innerHTML = `<strong>The correct answer is ${letters[q.ans]}:</strong> ${q.opts[q.ans]}<br/><br/>${q.exps[q.ans]}`;
+      els.mainExplanation.classList.add('visible');
+
+      // Enable next
+      els.btnNext.disabled = false;
+      if (currentIdx === currentQuestions.length - 1) {
+        els.btnNext.textContent = 'Finish Quiz';
+      }
+    }
+
+    // Navigation
+    els.btnPrev.onclick = () => {
+      if (currentIdx > 0) {
+        currentIdx--;
+        loadQuestion(currentIdx);
+      }
+    };
+
+    els.btnNext.onclick = () => {
+      if (currentIdx < currentQuestions.length - 1) {
+        currentIdx++;
+        loadQuestion(currentIdx);
+      } else {
+        showResults();
+      }
+    };
+
+    function showResults() {
+      els.quizHeader.style.display = 'none';
+      els.quizContainer.style.display = 'none';
+      els.resultsScreen.style.display = 'flex';
+
+      const total = currentQuestions.length;
+      const pct = Math.round((score / total) * 100);
+      
+      els.rScorePct.textContent = `${pct}%`;
+      els.rTotal.textContent = total;
+      els.rCorrect.textContent = score;
+      els.rWrong.textContent = total - score;
+
+      // Animate circle
+      setTimeout(() => {
+        els.scoreCircle.style.setProperty('--pct', `${pct * 3.6}deg`);
+      }, 100);
+
+      if (pct >= 90) {
+        els.rEmoji.textContent = '🏆';
+        els.rTitle.textContent = 'Outstanding!';
+        els.rSub.textContent = 'You are a database master. Ace that midsem!';
+      } else if (pct >= 75) {
+        els.rEmoji.textContent = '🌟';
+        els.rTitle.textContent = 'Great Job!';
+        els.rSub.textContent = 'Solid understanding of the concepts.';
+      } else if (pct >= 50) {
+        els.rEmoji.textContent = '👍';
+        els.rTitle.textContent = 'Good Effort';
+        els.rSub.textContent = 'Review the explanations for the ones you missed.';
+      } else {
+        els.rEmoji.textContent = '📚';
+        els.rTitle.textContent = 'Keep Practicing';
+        els.rSub.textContent = 'Take your time to review the traps and concepts.';
+      }
+    }
+  </script>
+</body>
+</html>
